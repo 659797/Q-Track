@@ -1,0 +1,662 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Track | QA Engineering Toolkit</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>Q-<span>Track</span></h2>
+            <p>QA Engineering Toolkit</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active" data-page="Dashboard">Dashboard</a>
+            <a href="#" class="nav-link" data-page="Requirements">Requirements</a>
+            <a href="#" class="nav-link" data-page="Test Scenarios">Test Scenarios</a>
+            <a href="#" class="nav-link" data-page="Test Cases">Test Cases</a>
+            <a href="#" class="nav-link" data-page="Test Execution">Test Execution</a>
+            <a href="#" class="nav-link" data-page="Bug Reports">Bug Reports</a>
+            <a href="#" class="nav-link" data-page="Traceability Matrix">Traceability Matrix</a>
+            <a href="#" class="nav-link" data-page="QA Reports">QA Reports</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>QA Engineering Toolkit</p>
+            <small>Version 1.0</small>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="top-header">
+            <div>
+                <h1 id="page-title">Dashboard</h1>
+                <p id="breadcrumb">Home / Dashboard</p>
+            </div>
+            <div class="header-date" id="current-date"></div>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard-content" class="page-content">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Dashboard Overview</h2>
+                    <p>Monitor your software testing activities.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Requirements</p><h2 id="requirements-count">0</h2></div>
+                <div class="stat-card"><p>Total Test Cases</p><h2 id="testcases-count">0</h2></div>
+                <div class="stat-card"><p>Passed Tests</p><h2 id="passed-count">0</h2></div>
+                <div class="stat-card"><p>Total Defects</p><h2 id="defects-count">0</h2></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Testing Progress</h3>
+                    <h3 id="progress-percentage">0%</h3>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"><div id="progress-fill"></div></div>
+                </div>
+                <div class="progress-details">
+                    <span>Passed: <strong id="passed-detail">0</strong></span>
+                    <span>Failed: <strong id="failed-detail">0</strong></span>
+                    <span>Not Run: <strong id="notrun-detail">0</strong></span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Defects by Severity</h3>
+                <div class="stats-grid">
+                    <div class="stat-card"><p>Critical</p><h2 id="critical-count">0</h2></div>
+                    <div class="stat-card"><p>High</p><h2 id="high-count">0</h2></div>
+                    <div class="stat-card"><p>Medium</p><h2 id="medium-count">0</h2></div>
+                    <div class="stat-card"><p>Low</p><h2 id="low-count">0</h2></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Recent Activity</h3>
+                <div id="activity-list" class="activity-list"></div>
+            </div>
+        </section>
+
+        <!-- REQUIREMENTS -->
+        <section id="requirements-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2>Requirements Management</h2>
+                    <p>Manage and track project requirements.</p>
+                </div>
+                <button class="primary-btn" id="add-requirement-btn">+ Add Requirement</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Requirements</p><h2 id="req-total">0</h2></div>
+                <div class="stat-card"><p>Functional</p><h2 id="req-functional">0</h2></div>
+                <div class="stat-card"><p>Non-Functional</p><h2 id="req-nonfunctional">0</h2></div>
+                <div class="stat-card"><p>Pending</p><h2 id="req-pending">0</h2></div>
+            </div>
+
+            <div class="filter-container">
+                <input id="requirement-search" placeholder="Search requirements...">
+                <select id="type-filter">
+                    <option value="">All Types</option>
+                    <option>Functional</option>
+                    <option>Non-Functional</option>
+                </select>
+                <select id="priority-filter">
+                    <option value="">All Priorities</option>
+                    <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+                </select>
+                <select id="status-filter">
+                    <option value="">All Statuses</option>
+                    <option>Pending</option><option>Approved</option><option>Implemented</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Title</th><th>Type</th>
+                            <th>Priority</th><th>Status</th><th>Actions</th>
+                        </tr></thead>
+                        <tbody id="requirements-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-requirements" class="empty-state">No requirements found.</div>
+            </div>
+        </section>
+
+        <!-- TEST SCENARIOS -->
+        <section id="scenarios-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2>Test Scenarios</h2>
+                    <p>Manage and organize your software testing scenarios.</p>
+                </div>
+                <button class="primary-btn" id="add-scenario-btn">+ Add Scenario</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Scenarios</p><h2 id="scenario-total">0</h2></div>
+                <div class="stat-card"><p>Positive</p><h2 id="scenario-positive">0</h2></div>
+                <div class="stat-card"><p>Negative</p><h2 id="scenario-negative">0</h2></div>
+                <div class="stat-card"><p>Pending</p><h2 id="scenario-pending">0</h2></div>
+            </div>
+
+            <div class="filter-container">
+                <input id="scenario-search" placeholder="Search scenarios...">
+                <select id="scenario-type-filter">
+                    <option value="">All Types</option>
+                    <option>Positive</option><option>Negative</option><option>Boundary</option>
+                </select>
+                <select id="scenario-priority-filter">
+                    <option value="">All Priorities</option>
+                    <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+                </select>
+                <select id="scenario-status-filter">
+                    <option value="">All Statuses</option>
+                    <option>Pending</option><option>Ready</option><option>Completed</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Scenario</th><th>Requirement</th>
+                            <th>Type</th><th>Priority</th><th>Status</th><th>Actions</th>
+                        </tr></thead>
+                        <tbody id="scenarios-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-scenarios" class="empty-state">No scenarios found.</div>
+            </div>
+        </section>
+
+        <!-- TEST CASES -->
+        <section id="testcases-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2>Test Case Management</h2>
+                    <p>Create and manage detailed test cases.</p>
+                </div>
+                <button class="primary-btn" id="add-testcase-btn">+ Add Test Case</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Test Cases</p><h2 id="testcase-total">0</h2></div>
+                <div class="stat-card"><p>Draft</p><h2 id="testcase-draft">0</h2></div>
+                <div class="stat-card"><p>Ready</p><h2 id="testcase-ready">0</h2></div>
+                <div class="stat-card"><p>Approved</p><h2 id="testcase-approved">0</h2></div>
+            </div>
+
+            <div class="filter-container">
+                <input id="testcase-search" placeholder="Search test cases...">
+                <select id="testcase-priority-filter">
+                    <option value="">All Priorities</option>
+                    <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+                </select>
+                <select id="testcase-status-filter">
+                    <option value="">All Statuses</option>
+                    <option>Draft</option><option>Ready</option><option>Approved</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Test Case</th><th>Scenario</th>
+                            <th>Priority</th><th>Status</th><th>Actions</th>
+                        </tr></thead>
+                        <tbody id="testcases-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-testcases" class="empty-state">No test cases found.</div>
+            </div>
+        </section>
+
+        <!-- TEST EXECUTION -->
+        <section id="execution-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2>Test Execution</h2>
+                    <p>Execute test cases and record the results.</p>
+                </div>
+                <button class="primary-btn" id="add-execution-btn">+ Execute Test Case</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Executions</p><h2 id="execution-total">0</h2></div>
+                <div class="stat-card"><p>Passed</p><h2 id="execution-passed">0</h2></div>
+                <div class="stat-card"><p>Failed</p><h2 id="execution-failed">0</h2></div>
+                <div class="stat-card"><p>Blocked</p><h2 id="execution-blocked">0</h2></div>
+            </div>
+
+            <div class="filter-container">
+                <input id="execution-search" placeholder="Search executions...">
+                <select id="execution-status-filter">
+                    <option value="">All Statuses</option>
+                    <option>Not Run</option><option>Passed</option><option>Failed</option><option>Blocked</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Test Case</th><th>Actual Result</th>
+                            <th>Status</th><th>Executed At</th><th>Actions</th>
+                        </tr></thead>
+                        <tbody id="executions-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-executions" class="empty-state">No executions found.</div>
+            </div>
+        </section>
+
+        <!-- BUG REPORTS -->
+        <section id="bugs-content" class="page-content" hidden>
+
+            <div class="page-heading">
+                <div>
+                    <h2>Bug Reports Management</h2>
+                    <p>Report, investigate, and manage software defects.</p>
+                </div>
+                <button class="primary-btn" id="add-bug-btn">+ Report New Bug</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Bugs</p>
+                    <h2 id="bug-total">0</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Open</p>
+                    <h2 id="bug-open">0</h2>
+                </div>
+                <div class="stat-card">
+                    <p>In Progress</p>
+                    <h2 id="bug-progress">0</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Fixed</p>
+                    <h2 id="bug-fixed">0</h2>
+                </div>
+            </div>
+
+            <div class="panel bug-summary-panel">
+                <h3>Defect Management</h3>
+                <p>Use the filters below to investigate and manage reported defects.</p>
+            </div>
+
+            <div class="filter-container">
+                <input id="bug-search" placeholder="Search by bug ID or title...">
+
+                <select id="bug-severity-filter">
+                    <option value="">All Severities</option>
+                    <option>Critical</option><option>High</option>
+                    <option>Medium</option><option>Low</option>
+                </select>
+
+                <select id="bug-priority-filter">
+                    <option value="">All Priorities</option>
+                    <option>Urgent</option><option>High</option>
+                    <option>Medium</option><option>Low</option>
+                </select>
+
+                <select id="bug-status-filter">
+                    <option value="">All Statuses</option>
+                    <option>Open</option><option>In Progress</option>
+                    <option>Fixed</option><option>Retest</option><option>Closed</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bug ID</th>
+                                <th>Bug Title</th>
+                                <th>Severity</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Linked Execution</th>
+                                <th>Reported Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bugs-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-bugs" class="empty-state">No bug reports found.</div>
+            </div>
+
+        </section>
+
+        <!-- TRACEABILITY MATRIX -->
+        <section id="traceability-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2>Requirements Traceability Matrix</h2>
+                    <p>Track each requirement through scenarios, test cases, executions, and bug reports.</p>
+                </div>
+                <button class="secondary-btn" id="refresh-traceability-btn" type="button">Refresh Matrix</button>
+            </div>
+
+            <div class="stats-grid traceability-stats">
+                <div class="stat-card"><p>Total Requirements</p><h2 id="trace-total-requirements">0</h2></div>
+                <div class="stat-card"><p>Covered Requirements</p><h2 id="trace-covered-requirements">0</h2></div>
+                <div class="stat-card"><p>Requirements Tested</p><h2 id="trace-tested-requirements">0</h2></div>
+                <div class="stat-card"><p>Test Coverage</p><h2 id="trace-coverage-percentage">0%</h2></div>
+            </div>
+
+            <div class="panel traceability-summary">
+                <div class="panel-heading">
+                    <h3>Requirement Coverage</h3>
+                    <strong id="trace-coverage-label">0 of 0 requirements covered</strong>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"><div id="trace-coverage-fill"></div></div>
+                </div>
+                <p class="muted-text">A requirement is covered when at least one test case is linked through a test scenario.</p>
+            </div>
+
+            <div class="filter-container">
+                <input id="trace-search" type="search" placeholder="Search requirement ID or title...">
+                <select id="trace-coverage-filter">
+                    <option value="">All Coverage</option>
+                    <option value="covered">Covered</option>
+                    <option value="not-covered">Not Covered</option>
+                </select>
+                <select id="trace-execution-filter">
+                    <option value="">All Execution Results</option>
+                    <option value="Passed">Passed</option>
+                    <option value="Failed">Failed</option>
+                    <option value="Blocked">Blocked</option>
+                    <option value="Not Run">Not Run</option>
+                    <option value="Not Executed">Not Executed</option>
+                </select>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrapper">
+                    <table class="traceability-table">
+                        <thead>
+                            <tr>
+                                <th>Requirement</th>
+                                <th>Test Scenarios</th>
+                                <th>Test Cases</th>
+                                <th>Execution Results</th>
+                                <th>Bug Reports</th>
+                                <th>Coverage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="traceability-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-traceability" class="empty-state" hidden>No requirements match your search. Add requirements to start building the matrix.</div>
+            </div>
+            <p class="traceability-note">The matrix is generated automatically from your existing Q-Track data. Update links in Requirements, Test Scenarios, Test Cases, Test Execution, or Bug Reports to update this view.</p>
+        </section>
+
+        <!-- PLACEHOLDER -->
+        <section id="placeholder-content" class="page-content" hidden>
+            <div class="page-heading">
+                <div>
+                    <h2 id="placeholder-title">Coming Soon</h2>
+                    <p>This module will be available in a future update.</p>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Module Under Development</h3>
+                <p>We're working on this feature. Stay tuned for updates.</p>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- REQUIREMENT MODAL -->
+<div class="modal" id="requirement-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">Add Requirement</h2>
+            <button type="button" class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <form id="requirement-form">
+            <input type="hidden" id="editing-requirement-id">
+            <div class="form-group"><label>Requirement Title</label><input id="requirement-title" required></div>
+            <div class="form-group"><label>Description</label><textarea id="requirement-description"></textarea></div>
+            <div class="form-group"><label>Type</label><select id="requirement-type"><option>Functional</option><option>Non-Functional</option></select></div>
+            <div class="form-group"><label>Priority</label><select id="requirement-priority"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+            <div class="form-group"><label>Status</label><select id="requirement-status"><option>Pending</option><option>Approved</option><option>Implemented</option></select></div>
+            <div class="form-group"><label>Acceptance Criteria</label><textarea id="acceptance-criteria"></textarea></div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancel-requirement">Cancel</button>
+                <button type="submit" class="primary-btn">Save Requirement</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SCENARIO MODAL -->
+<div class="modal" id="scenario-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="scenario-modal-title">Add Test Scenario</h2>
+            <button type="button" class="close-btn" id="close-scenario-modal">&times;</button>
+        </div>
+        <form id="scenario-form">
+            <input type="hidden" id="editing-scenario-id">
+            <div class="form-group"><label>Scenario Title</label><input id="scenario-title" required></div>
+            <div class="form-group"><label>Description</label><textarea id="scenario-description"></textarea></div>
+            <div class="form-group"><label>Linked Requirement</label><select id="scenario-requirement"><option value="">Select Requirement</option></select></div>
+            <div class="form-group"><label>Preconditions</label><textarea id="scenario-preconditions"></textarea></div>
+            <div class="form-group"><label>Scenario Type</label><select id="scenario-type"><option>Positive</option><option>Negative</option><option>Boundary</option></select></div>
+            <div class="form-group"><label>Priority</label><select id="scenario-priority"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+            <div class="form-group"><label>Status</label><select id="scenario-status"><option>Pending</option><option>Ready</option><option>Completed</option></select></div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancel-scenario">Cancel</button>
+                <button type="submit" class="primary-btn">Save Scenario</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- TEST CASE MODAL -->
+<div class="modal" id="testcase-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="testcase-modal-title">Add Test Case</h2>
+            <button type="button" class="close-btn" id="close-testcase-modal">&times;</button>
+        </div>
+        <form id="testcase-form">
+            <input type="hidden" id="editing-testcase-id">
+            <div class="form-group"><label>Test Case Title</label><input id="testcase-title" required></div>
+            <div class="form-group"><label>Description</label><textarea id="testcase-description"></textarea></div>
+            <div class="form-group"><label>Linked Scenario</label><select id="testcase-scenario"><option value="">Select Scenario</option></select></div>
+            <div class="form-group"><label>Preconditions</label><textarea id="testcase-preconditions"></textarea></div>
+            <div class="form-group"><label>Test Steps</label><textarea id="testcase-steps" required></textarea></div>
+            <div class="form-group"><label>Expected Result</label><textarea id="testcase-expected" required></textarea></div>
+            <div class="form-group"><label>Priority</label><select id="testcase-priority"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+            <div class="form-group"><label>Status</label><select id="testcase-status"><option>Draft</option><option>Ready</option><option>Approved</option></select></div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancel-testcase">Cancel</button>
+                <button type="submit" class="primary-btn">Save Test Case</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EXECUTION MODAL -->
+<div class="modal" id="execution-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="execution-modal-title">Execute Test Case</h2>
+            <button type="button" class="close-btn" id="close-execution-modal">&times;</button>
+        </div>
+        <form id="execution-form">
+            <input type="hidden" id="editing-execution-id">
+            <div class="form-group"><label>Test Case</label><select id="execution-testcase" required><option value="">Select Test Case</option></select></div>
+            <div class="form-group"><label>Test Steps</label><textarea id="execution-steps" readonly></textarea></div>
+            <div class="form-group"><label>Expected Result</label><textarea id="execution-expected" readonly></textarea></div>
+            <div class="form-group"><label>Actual Result</label><textarea id="execution-actual" required></textarea></div>
+            <div class="form-group"><label>Execution Status</label><select id="execution-status"><option>Not Run</option><option>Passed</option><option>Failed</option><option>Blocked</option></select></div>
+            <div class="form-group"><label>Comments</label><textarea id="execution-comments"></textarea></div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancel-execution">Cancel</button>
+                <button type="submit" class="primary-btn">Save Execution</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- BUG REPORT MODAL -->
+<div class="modal" id="bug-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="bug-modal-title">Report New Bug</h2>
+            <button type="button" class="close-btn" id="close-bug-modal">&times;</button>
+        </div>
+
+        <form id="bug-form">
+            <input type="hidden" id="editing-bug-id">
+
+            <div class="form-group">
+                <label for="bug-title">Bug Title</label>
+                <input id="bug-title" placeholder="Enter a clear bug title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-description">Description</label>
+                <textarea id="bug-description" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-steps">Steps to Reproduce</label>
+                <textarea id="bug-steps" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-expected">Expected Result</label>
+                <textarea id="bug-expected" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-actual">Actual Result</label>
+                <textarea id="bug-actual" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-execution">Linked Test Execution</label>
+                <select id="bug-execution"><option value="">No Linked Execution</option></select>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-severity">Severity</label>
+                <select id="bug-severity">
+                    <option>Critical</option><option>High</option>
+                    <option selected>Medium</option><option>Low</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-priority">Priority</label>
+                <select id="bug-priority">
+                    <option>Urgent</option><option>High</option>
+                    <option selected>Medium</option><option>Low</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bug-status">Status</label>
+                <select id="bug-status">
+                    <option>Open</option><option>In Progress</option>
+                    <option>Fixed</option><option>Retest</option><option>Closed</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancel-bug">Cancel</button>
+                <button type="submit" class="primary-btn">Save Bug Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- BUG DETAILS MODAL -->
+<div class="modal" id="bug-details-modal">
+    <div class="modal-content details-content">
+        <div class="modal-header">
+            <div>
+                <h2 id="details-bug-title">Bug Details</h2>
+                <p id="details-bug-id" class="muted-text"></p>
+            </div>
+            <button type="button" class="close-btn" id="close-bug-details">&times;</button>
+        </div>
+
+        <div class="details-badges" id="details-badges"></div>
+
+        <div class="details-grid">
+            <div class="detail-section">
+                <h3>Description</h3>
+                <p id="details-description"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Steps to Reproduce</h3>
+                <p id="details-steps" class="preserve-lines"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Expected Result</h3>
+                <p id="details-expected"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Actual Result</h3>
+                <p id="details-actual"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Linked Test Execution</h3>
+                <p id="details-execution"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Reported Date</h3>
+                <p id="details-date"></p>
+            </div>
+        </div>
+
+        <div class="detail-section history-section">
+            <h3>Status History</h3>
+            <div id="bug-history-list" class="history-list"></div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="details-close-btn">Close</button>
+            <button type="button" class="primary-btn" id="details-edit-btn">Edit Bug</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
